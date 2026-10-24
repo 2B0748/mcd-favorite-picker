@@ -1,0 +1,5 @@
+# API Response Information
+
+## Original Response
+
+{"success": true, "code": 200, "message": "请求成功", "data": {"list": []}}

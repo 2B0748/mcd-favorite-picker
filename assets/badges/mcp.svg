@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="108" height="26" role="img" aria-label="数据来自麦当劳官方 MCP">
+<rect width="108" height="26" rx="5" fill="#c94331"/>
+<path d="M5 0H40V26H5Q0 26 0 21V5Q0 0 5 0" fill="#4c453f"/>
+<g fill="#fff" font-family="'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif" font-size="12" text-anchor="middle">
+<text x="20.1" y="17">MCP</text>
+<text x="74.2" y="17">官方菜单</text>
+</g></svg>

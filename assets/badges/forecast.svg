@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="140" height="26" role="img" aria-label="偏好统计与比价不联网">
+<rect width="140" height="26" rx="5" fill="#b7975a"/>
+<path d="M5 0H72V26H5Q0 26 0 21V5Q0 0 5 0" fill="#4c453f"/>
+<g fill="#fff" font-family="'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif" font-size="12" text-anchor="middle">
+<text x="36.2" y="17">免 Token</text>
+<text x="106.3" y="17">本地计算</text>
+</g></svg>

@@ -1,0 +1,5 @@
+# API Response Information
+
+## Original Response
+
+{"success": true, "code": 200, "message": "请求成功", "data": {"list": [{"orderId": "A1", "orderType": "1", "createTime": "2026-08-15 14:16:14", "beType": "1", "beCode": "", "storeCode": "3450024", "storeName": "测试餐厅", "orderStatus": "订单已完成", "realTotalAmount": "22.9", "orderProductList": [{"productCode": "P0", "productName": "大堡口福三件套", "quantity": 1, "comboItemList": [{"productCode": "S0", "name": "Hold不住鸡排堡（椒盐风味）", "quantity": 1}, {"productCode": "S1", "name": "中薯条", "quantity": 1}, {"productCode": "S2", "name": "雪碧中杯", "quantity": 1}]}]}]}}

@@ -1,0 +1,23 @@
+# 本机产物与隐私数据，不入库
+prefs.json
+*.local.json
+quote-*.json
+deal-*.txt
+*.log
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# 系统与编辑器
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+
+# 临时渲染物
+*.tmp
+assets/_scratch/

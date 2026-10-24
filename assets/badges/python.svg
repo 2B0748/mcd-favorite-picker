@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="157" height="26" role="img" aria-label="Python 3.10 及以上，仅用标准库">
+<rect width="157" height="26" rx="5" fill="#c94331"/>
+<path d="M5 0H60V26H5Q0 26 0 21V5Q0 0 5 0" fill="#4c453f"/>
+<g fill="#fff" font-family="'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif" font-size="12" text-anchor="middle">
+<text x="30.2" y="17">Python</text>
+<text x="108.5" y="17">3.10+ 标准库</text>
+</g></svg>

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="84" height="26" role="img" aria-label="MIT 许可证">
+<rect width="84" height="26" rx="5" fill="#4c453f"/>
+<path d="M5 0H40V26H5Q0 26 0 21V5Q0 0 5 0" fill="#4c453f"/>
+<g fill="#fff" font-family="'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif" font-size="12" text-anchor="middle">
+<text x="20.1" y="17">MIT</text>
+<text x="62.2" y="17">许可</text>
+</g></svg>
