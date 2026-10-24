@@ -50,6 +50,13 @@
 
 完整运行记录见 [examples/verified-run.md](examples/verified-run.md)。
 
+## 适合谁用
+
+- 每周吃两次以上麦当劳、但每次都懒得算「套餐还是单点」的人；
+- 想按预算吃好、又不想天天重样的人（它会把近 7 天吃过的降权）；
+- 券包里躺着一堆券、却搞不清今天哪张能用的；
+- 想在自己的 Agent 里接麦当劳点餐能力、但不想从 35 个工具文档读起的开发者。
+
 ## 安装使用
 
 需要支持远程 MCP 的 AI 客户端（WorkBuddy / Cherry Studio / Cursor 等），以及你自己的麦当劳 MCP Token。脚本需要 Python 3.10+，只使用标准库。
