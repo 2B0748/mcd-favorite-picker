@@ -49,6 +49,22 @@ WorkBuddy 路径：左侧「专家·技能·连接器」→ 连接器 → 右上
 
 装到 `%USERPROFILE%\.workbuddy\skills\mcd-favorite-picker`，已存在会先备份。
 
+**Claude Code**
+
+```powershell
+./install.ps1 -Client claude
+```
+
+装到 `%USERPROFILE%\.claude\skills\mcd-favorite-picker`。
+
+**其他客户端**
+
+```powershell
+./install.ps1 -Client custom -Dest "你的技能目录"
+```
+
+没有技能目录概念的客户端（Cursor / Cline / Codex / Zed / Aider）不用装，直接读仓库根目录的 `AGENTS.md` 即可。
+
 **手动安装**
 
 把仓库里的 `skills/mcd-favorite-picker` 整个文件夹拷进你客户端的技能目录即可。
@@ -67,6 +83,18 @@ WorkBuddy 路径：左侧「专家·技能·连接器」→ 连接器 → 右上
 ```
 
 第一次它会问你在哪个城市或哪家店，因为 `query-nearby-stores` 需要城市 + 关键词（你要是有收藏门店就不用）。
+
+### 客户端不支持 MCP？
+
+跳过第 2、3 步，只配 Token，然后一条命令跑完：
+
+```powershell
+$env:MCD_MCP_TOKEN = "你的Token"
+python skills/mcd-favorite-picker/scripts/run_recommend.py --target 板烧 --city 芜湖 --keyword 步行街 --card
+```
+
+会生成 `今日推荐.md`（偏好 + 比价 + 券）、`prefs.json`、`口味画像卡.html`。
+已知门店编码时用 `--store <storeCode>` 可跳过搜索。这条路径不需要 AI，也不需要 MCP 客户端。
 
 ## 5. 常用问法
 
@@ -111,4 +139,4 @@ WorkBuddy 路径：左侧「专家·技能·连接器」→ 连接器 → 右上
 python skills/mcd-favorite-picker/tests/run_tests.py
 ```
 
-不需要 Token，也不会访问网络。8 项全绿说明脚本逻辑正常。
+不需要 Token，也不会访问网络。10 项全绿说明脚本逻辑正常。

@@ -1,8 +1,9 @@
 ---
 name: mcd-favorite-picker
-version: "1.1.0"
-description: 读取麦当劳历史订单算出最常买的汉堡/小食/套餐，按当前时段（早餐/午餐/下午茶/晚餐/夜宵）推荐，并顺带算出「单点 vs 套餐 vs 用券 vs 自组」哪种最省钱，可生成可分享的口味画像卡。触发场景：麦当劳今天吃什么、帮我按我的口味推荐、我常点的是什么、怎么点最便宜、查我的麦当劳订单、麦门人格。依赖已接入的麦当劳官方 MCP（连接器名 mcd-mcp）。
+version: "1.2.0"
+description: 读取麦当劳历史订单算出最常买的汉堡/小食/套餐，按当前时段（早餐/午餐/下午茶/晚餐/夜宵）推荐，并顺带算出「单点 vs 套餐 vs 用券 vs 自组」哪种最省钱，可生成可分享的口味画像卡。触发场景：麦当劳今天吃什么、帮我按我的口味推荐、我常点的是什么、怎么点最便宜、查我的麦当劳订单、麦门人格。通用 Skill：支持 MCP 的客户端直接调工具，不支持 MCP 的 Agent 走 scripts/run_recommend.py 一条命令跑完。
 agent_created: true
+license: MIT
 ---
 
 # 麦当劳口味推荐（mcd-favorite-picker）
@@ -15,9 +16,22 @@ agent_created: true
 
 ---
 
-## 前置检查
+## 两种运行方式（先选一条）
 
-需要连接器 `mcd-mcp`（麦当劳官方 MCP，35 个工具）。若工具列表里没有 `mcp__mcd-mcp__*`，让用户去【连接器 → 自定义连接器 → 配置 MCP】填：
+| 你的 Agent 情况 | 走哪条 | 需要什么 |
+|---|---|---|
+| 客户端支持远程 MCP（WorkBuddy / Claude Code / Cursor / Cherry Studio / Cline…） | **A. 直接调工具**，按下面的六步流程走 | 配好 `mcd-mcp` 连接器 |
+| 不支持 MCP，只能执行命令（Codex、Aider、各类终端 Agent、CI） | **B. 一条命令跑完**：`python scripts/run_recommend.py --target 板烧 --city 芜湖 --keyword 步行街` | 只需 Token |
+
+B 的输出是完整 markdown 报告（偏好 + 比价 + 券），逻辑与 A 完全一致——A 是让模型按步骤调工具，B 是脚本替模型调。**能用 A 就用 A**：模型能追问、能换店、能解释；B 适合无 MCP 环境或批量跑。
+
+---
+
+## 配置 Token 与连接器
+
+Token 到 `https://open.mcd.cn/mcp` 登录 → 控制台 → 激活。
+
+**方式 A（MCP 连接器）**：
 
 ```json
 {
@@ -31,7 +45,17 @@ agent_created: true
 }
 ```
 
-Token 在 `https://open.mcd.cn/mcp` 登录 → 控制台 → 激活。保存后要到列表里点「信任」并启用。
+各客户端位置不同：WorkBuddy 在【连接器 → 自定义连接器】；Claude Code 用 `claude mcp add` 或 `~/.claude.json`；Cursor 在 `~/.cursor/mcp.json`；Cherry Studio 在【设置 → MCP 服务器】。保存后记得在列表里**信任/启用**，否则工具不会挂上来。
+
+工具名前缀因客户端而异（WorkBuddy 为 `mcp__mcd-mcp__order-list`，有的客户端为 `mcd-mcp:order-list`）。**下文一律只写裸工具名**，按你客户端的实际前缀对应。
+
+**方式 B（命令行）**：Token 放环境变量 `MCD_MCP_TOKEN`，或写入 `~/.mcd_mcp_token`，或 `--token-file` 指定。
+
+```bash
+python scripts/mcp_client.py tools                  # 连通性自检，应显示 35 tools
+python scripts/run_recommend.py --store 3450024 --target 板烧 --card
+python scripts/run_recommend.py --city 芜湖 --keyword 步行街 --target 板烧
+```
 
 ⚠ **URL 必须是 `https://mcp.mcd.cn`**，不是 `https://open.mcd.cn/mcp`（后者是网页控制台，405）；`Bearer ` 前缀连空格不能少（否则 401）。
 
@@ -171,7 +195,7 @@ python scripts/make_card.py prefs.json --out 麦门口味画像.html --png 麦�
 python tests/run_tests.py
 ```
 
-覆盖：0/1/5/20 单、跨时段、prefs 去重累积、活动价识别、券的星期与日期校验。
+覆盖：0/1/5/20 单、跨时段、prefs 去重累积、活动价识别、券的星期与日期校验、MCP 客户端解析，共 10 项。
 改动任何脚本后先跑这个。
 
 ## 文件
@@ -179,7 +203,17 @@ python tests/run_tests.py
 | 文件 | 作用 |
 |---|---|
 | `references/api-notes.md` | 35 个工具的真实字段、信封格式、beType/beCode 铁律 |
+| `scripts/run_recommend.py` | **方式 B 入口**：一条命令跑完订单→偏好→门店→菜单→券→比价→报告 |
+| `scripts/mcp_client.py` | 零依赖 MCP 客户端（纯标准库），给不支持 MCP 的 Agent 用，也可单独调任意工具 |
 | `scripts/analyze_orders.py` | 订单 → 偏好统计 + prefs.json 增量累积 |
 | `scripts/best_deal.py` | 券可用性解析 + 四类方案比价 |
 | `scripts/make_card.py` | prefs.json → 可分享画像卡（HTML/PNG） |
 | `tests/` | fixture 生成与回归测试 |
+
+## 给模型的操作提示
+
+- **不要凭记忆报价格**。所有金额必须来自本次工具返回或脚本输出。
+- **不要假设菜单里有早餐**。非供早时段没有早餐分类，先看菜单再说。
+- 用户没给城市/门店时先问一句，别猜。
+- 报错先看是不是 405（地址错）或 401（Token 错），这两种占绝大多数。
+- 结论里必须带上**次数**和**日期**（「买过 4 次，最近 8/15」），这是可信度的来源。

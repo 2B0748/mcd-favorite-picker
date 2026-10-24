@@ -1,7 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="113" height="26" role="img" aria-label="离线回归测试通过">
-<rect width="113" height="26" rx="5" fill="#b7975a"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="26" role="img" aria-label="离线回归测试通过">
+<rect width="120" height="26" rx="5" fill="#b7975a"/>
 <path d="M5 0H44V26H5Q0 26 0 21V5Q0 0 5 0" fill="#4c453f"/>
 <g fill="#fff" font-family="'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif" font-size="12" text-anchor="middle">
 <text x="22.0" y="17">回归</text>
-<text x="78.7" y="17">8 项全绿</text>
+<text x="82.1" y="17">10 项全绿</text>
 </g></svg>

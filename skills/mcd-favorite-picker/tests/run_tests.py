@@ -8,6 +8,7 @@
 """
 
 import json
+import os
 import subprocess
 import sys
 import tempfile
@@ -98,6 +99,25 @@ def main():
     data = json.loads(js.read_text(encoding="utf-8"))
     expect("coupon_weekday", json.dumps(data, ensure_ascii=False),
            ['"ok": false', '"ok": true', "不在有效期"])
+
+    print("MCP 客户端（离线）：")
+    sys.path.insert(0, str(SCRIPTS))
+    import mcp_client as mc
+    ok = True
+    try:
+        sse = 'event: message\ndata: {"jsonrpc":"2.0","id":7,"result":{"tools":[]}}\n\n'
+        assert mc.McpClient._parse(sse, "text/event-stream")["result"]["tools"] == []
+        assert mc.McpClient._parse('{"ok": true}', "application/json")["ok"] is True
+        os.environ["MCD_MCP_TOKEN"] = "  dummy-token  "
+        assert mc.load_token() == "dummy-token"
+        assert mc.load_token(token="explicit") == "explicit"
+    except Exception as e:
+        ok = False
+        fails.append(f"[mcp_parse] {e}")
+    print(f"  {'ok  ' if ok else 'FAIL'} mcp_parse")
+    if not (SCRIPTS / "run_recommend.py").exists():
+        fails.append("[entrypoints] run_recommend.py 缺失")
+    print(f"  {'ok  ' if (SCRIPTS / 'run_recommend.py').exists() else 'FAIL'} 一键入口存在")
 
     print()
     if fails:

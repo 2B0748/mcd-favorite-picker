@@ -75,7 +75,7 @@ def cover():
             f'<text x="{bar_x + 74 + bw + 10:.0f}" y="{y + 16}" fill="{txtcol}" font-size="14"'
             f'{" font-weight=\"700\"" if kind == "promo" else ""}>¥{price:.2f}</text>')
 
-    chips = [("35 个官方工具", 96), ("160 条营养数据", 250), ("4 类比价方案", 424), ("8 项回归", 570)]
+    chips = [("35 个官方工具", 96), ("160 条营养数据", 250), ("4 类比价方案", 424), ("10 项回归", 570)]
     chip_svg = "".join(
         f'<rect x="{x}" y="330" width="{width_of(t, 14) + 28:.0f}" height="34" rx="17" '
         f'fill="none" stroke="{BORDER}"/>'
@@ -172,9 +172,10 @@ def deal_chart():
 
 if __name__ == "__main__":
     badge("python", "Python", "3.10+ 标准库", RED, "Python 3.10 及以上，仅用标准库")
+    badge("agents", "任意 Agent", "MCP 或 CLI", COFFEE, "支持 MCP 的客户端直连，其余走命令行")
     badge("forecast", "免 Token", "本地计算", KHAKI, "偏好统计与比价不联网")
     badge("mcp", "MCP", "官方菜单", RED, "数据来自麦当劳官方 MCP")
-    badge("tests", "回归", "8 项全绿", KHAKI, "离线回归测试通过")
+    badge("tests", "回归", "10 项全绿", KHAKI, "离线回归测试通过")
     badge("license", "MIT", "许可", COFFEE, "MIT 许可证")
     cover()
     workflow()

@@ -126,6 +126,11 @@ def find(menu, kw, exclude=(), limit=12):
 
 def load_nutrition(path):
     txt = Path(path).read_text(encoding="utf-8-sig", errors="ignore")
+    return parse_nutrition_text(txt)
+
+
+def parse_nutrition_text(txt):
+    """接受 MCP 原文（含 JSON 信封）或纯表格文本。"""
     if '"data"' in txt:
         s, e = txt.find("{"), txt.rfind("}")
         if s != -1 and e > s:

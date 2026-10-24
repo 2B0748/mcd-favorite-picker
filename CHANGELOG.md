@@ -1,5 +1,32 @@
 # 变更记录
 
+## v1.2.0 — 2026-10-24
+
+本轮主题：**解除客户端绑定**，让不支持 MCP 的 Agent 也能用。
+
+### 新增
+
+- **`AGENTS.md`**：跨 Agent 的接入约定（三种路径、环境契约、必须遵守的约束、四个会坑人的接口事实）。Codex / Cursor / Cline / Zed 等会直接读它。
+- **`scripts/mcp_client.py`**：纯标准库的 MCP 客户端。实现了 Streamable HTTP 传输、JSON-RPC 编解码、SSE 响应解析、`Mcp-Session-Id` 会话保持。任何能执行命令的 Agent 都能借它调到同一批官方接口。
+- **`scripts/run_recommend.py`**：一条命令跑完「订单 → 偏好 → 门店 → 菜单 → 券 → 比价 → 报告」，不需要 AI，也不需要 MCP 客户端。输出 `今日推荐.md` + `prefs.json`（可选画像卡）。
+- **`docs/agent-compatibility.md`**：各客户端的文件位置、工具名前缀、推荐路径与取舍说明。
+- Token 支持三种来源：环境变量 `MCD_MCP_TOKEN`、`~/.mcd_mcp_token`、`--token-file`。
+
+### 变更
+
+- `SKILL.md` 去掉 WorkBuddy 专属描述：工具名统一写裸名（`order-list`），前缀差异交给客户端对应；新增「两种运行方式」选择表。
+- `README` 增加「任何 Agent 都能用」章节与新徽章。
+
+### 修正
+
+- `mcp_client.py` 的子命令不接受全局参数（`--token-file` 写在子命令后会报 usage 错）。原因是 argparse 的 parents 默认值会覆盖主解析器已设的值，改用 `default=argparse.SUPPRESS` 解决。
+- `best_deal.load_nutrition` 拆出 `parse_nutrition_text`，使内存中的文本也能解析，供一键入口复用。
+
+### 已知限制
+
+- 未在全部客户端逐一实测。已实测：WorkBuddy（MCP 直连）、命令行路径（Python 3.13）。其余客户端按文档适配，走命令行路径可保证可用。
+- 外送、得来速、团餐仍未联调。
+
 ## v1.1.0 — 2026-10-24
 
 首个公开版本，同时也是参赛提交版本。

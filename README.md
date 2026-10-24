@@ -1,12 +1,14 @@
 ![麦门口味雷达：读你的订单，算出今天最省的点法](assets/cover.svg)
 
-![Python 3.10+](assets/badges/python.svg) ![免 Token 本地计算](assets/badges/forecast.svg) ![MCP 官方菜单](assets/badges/mcp.svg) ![回归 8 项全绿](assets/badges/tests.svg) ![MIT 许可](assets/badges/license.svg)
+![Python 3.10+](assets/badges/python.svg) ![任意 Agent](assets/badges/agents.svg) ![免 Token 本地计算](assets/badges/forecast.svg) ![MCP 官方菜单](assets/badges/mcp.svg) ![回归 10 项全绿](assets/badges/tests.svg) ![MIT 许可](assets/badges/license.svg)
 
 **你常吃的那几样，和你今天最省的点法。**
 
 一句话说需求 → 读历史订单 → 按当下时段推荐 → 算清「单点 / 套餐 / 用券 / 自组」谁最省。
 
-[先看效果](#先看效果) · [真实案例](#真实案例) · [安装使用](#安装使用) · [如何工作](#如何工作) · [验证记录](#验证记录) · [欢迎与支持](#欢迎与支持)
+**不绑定任何一家客户端**：支持 MCP 的 Agent 直接调工具，不支持的 Agent 用一条命令跑完。
+
+[先看效果](#先看效果) · [真实案例](#真实案例) · [安装使用](#安装使用) · [任何 Agent 都能用](#任何-agent-都能用) · [如何工作](#如何工作) · [验证记录](#验证记录) · [欢迎与支持](#欢迎与支持)
 
 ## 先看效果
 
@@ -78,6 +80,32 @@ Token 只填在你自己的客户端配置里。仓库里的 [`mcp-config.exampl
 
 详细步骤见 [docs/quick-start.md](docs/quick-start.md)。
 
+## 任何 Agent 都能用
+
+远程 MCP 不是所有 Agent 都支持。所以这个项目准备了三条路径，**没有一条需要改代码**：
+
+| 你的 Agent | 走哪条 | 一行命令 |
+|---|---|---|
+| 支持远程 MCP | **直连**，按 SKILL.md 六步走 | 配好连接器即可 |
+| 只能执行命令 | **一条命令跑完** | `python skills/mcd-favorite-picker/scripts/run_recommend.py --target 板烧 --city 芜湖 --keyword 步行街` |
+| 需要自己编排 | **单工具直调** | `python skills/mcd-favorite-picker/scripts/mcp_client.py call order-list` |
+
+第三条的 `mcp_client.py` 是纯标准库实现的 MCP 客户端：Streamable HTTP 传输、JSON-RPC、SSE 解析、`Mcp-Session-Id` 会话保持都做了。它存在的唯一理由是——**Agent 不支持 MCP 时，仍然能调到同一批官方接口**。
+
+```powershell
+# 连通性自检，应显示 35 tools
+python skills/mcd-favorite-picker/scripts/mcp_client.py tools
+
+# 一条命令出完整报告（不需要 AI，也不需要 MCP 客户端）
+python skills/mcd-favorite-picker/scripts/run_recommend.py --store 3450024 --target 板烧 --card
+```
+
+输出三样东西：`今日推荐.md`（偏好 + 比价 + 券）、`prefs.json`（可反复累积）、`口味画像卡.html`。
+
+Token 放环境变量 `MCD_MCP_TOKEN`、`~/.mcd_mcp_token`，或 `--token-file` 指定，三种都行。
+
+各客户端的具体位置（WorkBuddy / Claude Code / Cursor / Cherry Studio / Cline / Codex / Zed / Aider）见 [docs/agent-compatibility.md](docs/agent-compatibility.md)；给模型看的行为约定见 [AGENTS.md](AGENTS.md)。
+
 ## 如何工作
 
 ![四步流程](assets/workflow.svg)
@@ -101,7 +129,7 @@ AI 负责理解需求、调官方工具；本地脚本负责能算清楚的部�
 | 范围 | 已完成的验证 |
 |---|---|
 | 真实 MCP 调用 | 35 个工具枚举、菜单 14 分类 122 品、四类方案比价、券可用性判定，均为 2026-10-24 真实响应 |
-| 离线回归 | 8 项全绿：0/1/5/20 单、跨时段、prefs 去重累积、活动价识别、券的星期与日期校验 |
+| 离线回归 | 10 项全绿：0/1/5/20 单、跨时段、prefs 去重累积、活动价识别、券的星期与日期校验、MCP 客户端解析 |
 | 画像卡 | HTML 与 PNG 导出均验证；PNG 截图后自动裁边 |
 | 已知缺口 | 真实账户仅 1 单历史，偏好结论样本不足；带券下单链路、外送与团餐未实测 |
 
@@ -115,11 +143,15 @@ python skills/mcd-favorite-picker/tests/run_tests.py
 
 | 文件 | 用途 |
 |---|---|
+| [`AGENTS.md`](AGENTS.md) | 跨 Agent 接入约定：三种路径、环境契约、必须遵守的约束 |
 | [`skills/mcd-favorite-picker/SKILL.md`](skills/mcd-favorite-picker/SKILL.md) | 六步对话流程、时段表、输出模板与边界 |
+| [`scripts/run_recommend.py`](skills/mcd-favorite-picker/scripts/run_recommend.py) | 一条命令跑完整个链路，不需要 MCP 客户端 |
+| [`scripts/mcp_client.py`](skills/mcd-favorite-picker/scripts/mcp_client.py) | 零依赖 MCP 客户端，给不支持 MCP 的 Agent 用 |
 | [`scripts/analyze_orders.py`](skills/mcd-favorite-picker/scripts/analyze_orders.py) | 订单 → 偏好统计 + `prefs.json` 增量累积 |
 | [`scripts/best_deal.py`](skills/mcd-favorite-picker/scripts/best_deal.py) | 券可用性解析 + 四类方案比价 |
 | [`scripts/make_card.py`](skills/mcd-favorite-picker/scripts/make_card.py) | `prefs.json` → 可分享画像卡 |
 | [`references/api-notes.md`](skills/mcd-favorite-picker/references/api-notes.md) | 35 个工具的真实字段与踩坑记录 |
+| [`docs/agent-compatibility.md`](docs/agent-compatibility.md) | 各客户端的放文件位置与能力矩阵 |
 | [`tools/gen_assets.py`](tools/gen_assets.py) | 本文所有图的生成脚本，改字重跑 |
 
 ## 欢迎与支持
